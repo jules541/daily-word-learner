@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Word Learner - Expand Your Vocabulary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Using beautiful fonts from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Spectral:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== CSS VARIABLES =====
+           These are like settings we can reuse throughout our design */
+        :root {
+            --cream: #faf8f5;
+            --warm-white: #fffef9;
+            --dark-text: #2a2421;
+            --medium-text: #5a534e;
+            --accent: #c17767;
+            --accent-dark: #a15d4e;
+            --success: #7ba05b;
+            --border: #e8e3dc;
+            --shadow: rgba(42, 36, 33, 0.1);
+        }
+
+        /* ===== RESET & BASE STYLES =====
+           This removes default browser styling so we have a clean slate */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Spectral', serif;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--warm-white) 100%);
+            color: var(--dark-text);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.7;
+        }
+
+        /* ===== CONTAINER =====
+           This centers our app and limits its width for better readability */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* ===== HEADER =====
+           The top section with our logo and stats */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--medium-text);
+            font-weight: 300;
+            font-style: italic;
+        }
+
+        /* ===== STATS BAR =====
+           Shows user's learning progress */
+        .stats {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: white;
+            padding: 20px 35px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--border);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--medium-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 400;
+        }
+
+        /* ===== WORD CARD =====
+           The main card that displays today's word */
+        .word-card {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            box-shadow: 0 10px 50px var(--shadow);
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .word-header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+        }
+
+        .word-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+
+        .pronunciation {
+            font-size: 1.3rem;
+            color: var(--medium-text);
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .part-of-speech {
+            display: inline-block;
+            background: var(--cream);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--accent);
+            font-weight: 600;
+            text-transform: lowercase;
+            letter-spacing: 0.5px;
+        }
+
+        .definition {
+            font-size: 1.4rem;
+            line-height: 1.8;
+            margin-bottom: 30px;
+            color: var(--dark-text);
+        }
+
+        .example-section {
+            background: var(--cream);
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid var(--accent);
+            margin-bottom: 30px;
+        }
+
+        .example-label {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--accent);
+            margin-bottom: 10px;
+        }
+
+        .example-text {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: var(--accent-dark);
+            font-style: normal;
+        }
+
+        /* ===== BUTTONS =====
+           Action buttons for marking words as learned */
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: 'Crimson Pro', serif;
+            padding: 15px 35px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 4px 15px rgba(193, 119, 103, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(193, 119, 103, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== LEARNED WORDS SECTION ===== */
+        .learned-section {
+            margin-top: 50px;
+            animation: fadeInUp 1s ease;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--dark-text);
+        }
+
+        .learned-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .learned-word {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 10px var(--shadow);
+            transition: all 0.3s ease;
+        }
+
+        .learned-word:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .learned-word-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 5px;
+        }
+
+        .learned-date {
+            font-size: 0.85rem;
+            color: var(--medium-text);
+            font-style: italic;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: var(--medium-text);
+            font-style: italic;
+        }
+
+        /* ===== ANIMATIONS =====
+           These make elements fade and slide in nicely */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN =====
+           Makes the app look good on phones and tablets */
+        @media (max-width: 768px) {
+            .word-card {
+                padding: 30px;
+            }
+
+            .word-title {
+                font-size: 2.5rem;
+            }
+
+            .definition {
+                font-size: 1.2rem;
+            }
+
+            .stats {
+                gap: 15px;
+            }
+
+            .stat-item {
+                padding: 15px 25px;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER SECTION -->
+        <header>
+            <h1 class="logo">Daily Word Learner</h1>
+            <p class="tagline">Expand your vocabulary, one word at a time</p>
+            
+            <!-- STATS: Shows progress to motivate the user -->
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="streakCount">0</span>
+                    <span class="stat-label">Day Streak</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="totalWords">0</span>
+                    <span class="stat-label">Words Learned</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- WORD OF THE DAY CARD -->
+        <div class="word-card">
+            <div class="word-header">
+                <h2 class="word-title" id="wordTitle">Loading...</h2>
+                <div class="pronunciation" id="pronunciation"></div>
+                <span class="part-of-speech" id="partOfSpeech"></span>
+            </div>
+
+            <div class="definition" id="definition"></div>
+
+            <div class="example-section">
+                <div class="example-label">Example</div>
+                <div class="example-text" id="example"></div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="actions">
+                <button class="btn btn-primary" id="markLearnedBtn">
+                    ✓ I've Learned This Word
+                </button>
+                <button class="btn btn-secondary" id="nextWordBtn">
+                    Skip to Next Word →
+                </button>
+            </div>
+        </div>
+
+        <!-- LEARNED WORDS HISTORY -->
+        <div class="learned-section">
+            <h3 class="section-title">Your Word Collection</h3>
+            <div class="learned-grid" id="learnedGrid">
+                <div class="empty-state">Start learning words to build your collection!</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== WORD DATABASE =====
+        // This is our collection of words to learn
+        // In a real app, this could come from an API (external service)
+        // Now with 100 words - over 3 months of daily learning!
+        const wordDatabase = [
+            {
+                word: "Ephemeral",
+                pronunciation: "ih-FEM-er-uhl",
+                partOfSpeech: "adjective",
+                definition: "Lasting for a very short time; transitory or fleeting.",
+                example: "The beauty of cherry blossoms is ephemeral, lasting only a few weeks each spring.",
+                exampleWord: "ephemeral"
+            },
+            {
+                word: "Serendipity",
+                pronunciation: "ser-uhn-DIP-i-tee",
+                partOfSpeech: "noun",
+                definition: "The occurrence of events by chance in a happy or beneficial way.",
+                example: "Finding that rare book at the yard sale was pure serendipity.",
+                exampleWord: "serendipity"
+            },
+            {
+                word: "Resilient",
+                pronunciation: "rih-ZIL-yuhnt",
+                partOfSpeech: "adjective",
+                definition: "Able to recover quickly from difficult conditions; flexible and adaptable.",
+                example: "Despite facing many setbacks, she remained resilient and continued pursuing her dreams.",
+                exampleWord: "resilient"
+            },
+            {
+                word: "Eloquent",
+                pronunciation: "EL-uh-kwuhnt",
+                partOfSpeech: "adjective",
+                definition: "Fluent or persuasive in speaking or writing; clearly expressing ideas.",
+                example: "The speaker delivered an eloquent presentation that moved the entire audience.",
+                exampleWord: "eloquent"
+            },
+            {
+                word: "Meticulous",
+                pronunciation: "muh-TIK-yuh-luhs",
+                partOfSpeech: "adjective",
+                definition: "Showing great attention to detail; very careful and precise.",
+                example: "The surgeon was meticulous in her preparation for the complex operation.",
+                exampleWord: "meticulous"
+            },
+            {
+                word: "Paradigm",
+                pronunciation: "PAIR-uh-dime",
+                partOfSpeech: "noun",
+                definition: "A typical example or pattern of something; a model or framework.",
+                example: "The invention of the internet created a new paradigm for communication.",
+                exampleWord: "paradigm"
+            },
+            {
+                word: "Ubiquitous",
+                pronunciation: "yoo-BIK-wi-tuhs",
+                partOfSpeech: "adjective",
+                definition: "Present, appearing, or found everywhere; omnipresent.",
+                example: "Smartphones have become ubiquitous in modern society.",
+                exampleWord: "ubiquitous"
+            },
+            {
+                word: "Innovate",
+                pronunciation: "IN-uh-vayt",
+                partOfSpeech: "verb",
+                definition: "To introduce new ideas, methods, or products; to make changes in something established.",
+                example: "The company continues to innovate with cutting-edge technology.",
+                exampleWord: "innovate"
+            },
+            {
+                word: "Candid",
+                pronunciation: "KAN-did",
+                partOfSpeech: "adjective",
+                definition: "Truthful and straightforward; frank and honest in expression.",
+                example: "I appreciate your candid feedback on my project.",
+                exampleWord: "candid"
+            },
+            {
+                word: "Cultivate",
+                pronunciation: "KUHL-tuh-vayt",
+                partOfSpeech: "verb",
+                definition: "To foster the growth of something; to try to acquire or develop a quality or skill.",
+                example: "She worked hard to cultivate meaningful relationships with her colleagues.",
+                exampleWord: "cultivate"
+            },
+            {
+                word: "Ambiguous",
+                pronunciation: "am-BIG-yoo-uhs",
+                partOfSpeech: "adjective",
+                definition: "Open to more than one interpretation; not having one obvious meaning.",
+                example: "The ambiguous statement left everyone confused about the actual deadline.",
+                exampleWord: "ambiguous"
+            },
+            {
+                word: "Benevolent",
+                pronunciation: "buh-NEV-uh-luhnt",
+                partOfSpeech: "adjective",
+                definition: "Well-meaning and kindly; showing goodwill and generosity.",
+                example: "The benevolent donor gave millions to help fund education programs.",
+                exampleWord: "benevolent"
+            },
+            {
+                word: "Comprehensive",
+                pronunciation: "kom-prih-HEN-siv",
+                partOfSpeech: "adjective",
+                definition: "Complete and including everything that is necessary; thorough.",
+                example: "The report provided a comprehensive analysis of the market trends.",
+                exampleWord: "comprehensive"
+            },
+            {
+                word: "Diligent",
+                pronunciation: "DIL-ih-juhnt",
+                partOfSpeech: "adjective",
+                definition: "Showing care and conscientiousness in one's work or duties.",
+                example: "Her diligent study habits helped her ace all her exams.",
+                exampleWord: "diligent"
+            },
+            {
+                word: "Enigma",
+                pronunciation: "ih-NIG-muh",
+                partOfSpeech: "noun",
+                definition: "A person or thing that is mysterious, puzzling, or difficult to understand.",
+                example: "The artist's sudden disappearance remains an enigma to this day.",
+                exampleWord: "enigma"
+            },
+            {
+                word: "Frugal",
+                pronunciation: "FROO-guhl",
+                partOfSpeech: "adjective",
+                definition: "Economical with money or resources; avoiding waste.",
+                example: "Living a frugal lifestyle helped them save enough money to buy a house.",
+                exampleWord: "frugal"
+            },
+            {
+                word: "Gregarious",
+                pronunciation: "grih-GAIR-ee-uhs",
+                partOfSpeech: "adjective",
+                definition: "Fond of company; sociable and outgoing.",
+                example: "His gregarious nature made him popular at every social gathering.",
+                exampleWord: "gregarious"
+            },
+            {
+                word: "Harmonious",
+                pronunciation: "har-MOH-nee-uhs",
+                partOfSpeech: "adjective",
+                definition: "Forming a pleasing or consistent whole; free from disagreement or dissent.",
+                example: "The team worked in harmonious collaboration to complete the project.",
+                exampleWord: "harmonious"
+            },
+            {
+                word: "Indifferent",
+                pronunciation: "in-DIF-er-uhnt",
+                partOfSpeech: "adjective",
+                definition: "Having no particular interest or sympathy; unconcerned or neutral.",
+                example: "She seemed indifferent to the criticism and continued with her plan.",
+                exampleWord: "indifferent"
+            },
+            {
+                word: "Judicious",
+                pronunciation: "joo-DISH-uhs",
+                partOfSpeech: "adjective",
+                definition: "Having, showing, or done with good judgment or sense.",
+                example: "The manager made a judicious decision to postpone the launch.",
+                exampleWord: "judicious"
+            },
+            {
+                word: "Kinetic",
+                pronunciation: "kih-NET-ik",
+                partOfSpeech: "adjective",
+                definition: "Relating to or resulting from motion; energetic and lively.",
+                example: "The kinetic energy of the moving car was converted to heat by the brakes.",
+                exampleWord: "kinetic"
+            },
+            {
+                word: "Lucid",
+                pronunciation: "LOO-sid",
+                partOfSpeech: "adjective",
+                definition: "Expressed clearly; easy to understand; showing the ability to think clearly.",
+                example: "Despite his illness, he had a lucid moment where he recognized everyone.",
+                exampleWord: "lucid"
+            },
+            {
+                word: "Melancholy",
+                pronunciation: "MEL-uhn-kol-ee",
+                partOfSpeech: "noun",
+                definition: "A feeling of pensive sadness, typically with no obvious cause.",
+                example: "A sense of melancholy washed over him as he looked at the old photographs.",
+                exampleWord: "melancholy"
+            },
+            {
+                word: "Nostalgia",
+                pronunciation: "nah-STAL-juh",
+                partOfSpeech: "noun",
+                definition: "A sentimental longing for the past, typically for a period with happy memories.",
+                example: "The smell of fresh cookies filled her with nostalgia for her grandmother's kitchen.",
+                exampleWord: "nostalgia"
+            },
+            {
+                word: "Optimistic",
+                pronunciation: "op-tih-MIS-tik",
+                partOfSpeech: "adjective",
+                definition: "Hopeful and confident about the future; expecting positive outcomes.",
+                example: "She remained optimistic about finding a job despite many rejections.",
+                exampleWord: "optimistic"
+            },
+            {
+                word: "Pragmatic",
+                pronunciation: "prag-MAT-ik",
+                partOfSpeech: "adjective",
+                definition: "Dealing with things sensibly and realistically based on practical considerations.",
+                example: "His pragmatic approach to problem-solving focused on what actually worked.",
+                exampleWord: "pragmatic"
+            },
+            {
+                word: "Quintessential",
+                pronunciation: "kwin-tuh-SEN-shuhl",
+                partOfSpeech: "adjective",
+                definition: "Representing the most perfect or typical example of a quality or class.",
+                example: "She was the quintessential professional, always punctual and prepared.",
+                exampleWord: "quintessential"
+            },
+            {
+                word: "Reciprocal",
+                pronunciation: "rih-SIP-ruh-kuhl",
+                partOfSpeech: "adjective",
+                definition: "Given, felt, or done in return; mutual.",
+                example: "Their friendship was built on reciprocal respect and trust.",
+                exampleWord: "reciprocal"
+            },
+            {
+                word: "Scrutinize",
+                pronunciation: "SKROOT-n-ize",
+                partOfSpeech: "verb",
+                definition: "To examine or inspect closely and thoroughly.",
+                example: "The inspector will scrutinize every detail of the building's structure.",
+                exampleWord: "scrutinize"
+            },
+            {
+                word: "Tenacious",
+                pronunciation: "tuh-NAY-shuhs",
+                partOfSpeech: "adjective",
+                definition: "Not readily letting go; persistent and determined.",
+                example: "Her tenacious spirit helped her overcome every obstacle in her path.",
+                exampleWord: "tenacious"
+            },
+            {
+                word: "Unprecedented",
+                pronunciation: "uhn-PRES-ih-den-tid",
+                partOfSpeech: "adjective",
+                definition: "Never done or known before; novel and without previous example.",
+                example: "The company experienced unprecedented growth in the past quarter.",
+                exampleWord: "unprecedented"
+            },
+            {
+                word: "Versatile",
+                pronunciation: "VUR-suh-tuhl",
+                partOfSpeech: "adjective",
+                definition: "Able to adapt or be adapted to many different functions or activities.",
+                example: "The versatile actor could play both comedic and dramatic roles equally well.",
+                exampleWord: "versatile"
+            },
+            {
+                word: "Whimsical",
+                pronunciation: "HWIM-zih-kuhl",
+                partOfSpeech: "adjective",
+                definition: "Playfully quaint or fanciful, especially in an appealing way.",
+                example: "The garden had a whimsical charm with its colorful sculptures and winding paths.",
+                exampleWord: "whimsical"
+            },
+            {
+                word: "Zealous",
+                pronunciation: "ZEL-uhs",
+                partOfSpeech: "adjective",
+                definition: "Having or showing great energy or enthusiasm in pursuit of a cause.",
+                example: "The zealous volunteers worked tirelessly to support the community project.",
+                exampleWord: "zealous"
+            },
+            {
+                word: "Adversity",
+                pronunciation: "ad-VUR-sih-tee",
+                partOfSpeech: "noun",
+                definition: "Difficulties or misfortune; a difficult or unpleasant situation.",
+                example: "She showed great strength in the face of adversity.",
+                exampleWord: "adversity"
+            },
+            {
+                word: "Authentic",
+                pronunciation: "aw-THEN-tik",
+                partOfSpeech: "adjective",
+                definition: "Of undisputed origin; genuine and real.",
+                example: "The museum confirmed the painting was an authentic work by the famous artist.",
+                exampleWord: "authentic"
+            },
+            {
+                word: "Brevity",
+                pronunciation: "BREV-ih-tee",
+                partOfSpeech: "noun",
+                definition: "Concise and exact use of words; shortness of time or duration.",
+                example: "The brevity of his speech was appreciated by the tired audience.",
+                exampleWord: "brevity"
+            },
+            {
+                word: "Coherent",
+                pronunciation: "koh-HEER-uhnt",
+                partOfSpeech: "adjective",
+                definition: "Logical and consistent; able to speak clearly and logically.",
+                example: "She presented a coherent argument that convinced the committee.",
+                exampleWord: "coherent"
+            },
+            {
+                word: "Debacle",
+                pronunciation: "dih-BAH-kuhl",
+                partOfSpeech: "noun",
+                definition: "A sudden and ignominious failure; a fiasco.",
+                example: "The product launch turned into a debacle when the systems crashed.",
+                exampleWord: "debacle"
+            },
+            {
+                word: "Elaborate",
+                pronunciation: "ih-LAB-uh-rayt",
+                partOfSpeech: "adjective",
+                definition: "Involving many carefully arranged parts or details; detailed and complicated.",
+                example: "The wedding featured elaborate decorations that took weeks to prepare.",
+                exampleWord: "elaborate"
+            },
+            {
+                word: "Facilitate",
+                pronunciation: "fuh-SIL-ih-tayt",
+                partOfSpeech: "verb",
+                definition: "To make an action or process easy or easier.",
+                example: "The new software will facilitate communication between team members.",
+                exampleWord: "facilitate"
+            },
+            {
+                word: "Gratitude",
+                pronunciation: "GRAT-ih-tood",
+                partOfSpeech: "noun",
+                definition: "The quality of being thankful; readiness to show appreciation.",
+                example: "She expressed her gratitude for all the support during difficult times.",
+                exampleWord: "gratitude"
+            },
+            {
+                word: "Hypothesis",
+                pronunciation: "hy-POTH-uh-sis",
+                partOfSpeech: "noun",
+                definition: "A supposition or proposed explanation made on limited evidence.",
+                example: "The scientist tested her hypothesis through a series of experiments.",
+                exampleWord: "hypothesis"
+            },
+            {
+                word: "Integrity",
+                pronunciation: "in-TEG-rih-tee",
+                partOfSpeech: "noun",
+                definition: "The quality of being honest and having strong moral principles.",
+                example: "His integrity was never questioned throughout his long career.",
+                exampleWord: "integrity"
+            },
+            {
+                word: "Jovial",
+                pronunciation: "JOH-vee-uhl",
+                partOfSpeech: "adjective",
+                definition: "Cheerful and friendly; full of good humor.",
+                example: "The host's jovial personality made everyone feel welcome at the party.",
+                exampleWord: "jovial"
+            },
+            {
+                word: "Keen",
+                pronunciation: "KEEN",
+                partOfSpeech: "adjective",
+                definition: "Having or showing eagerness or enthusiasm; sharp or penetrating.",
+                example: "She had a keen interest in learning about different cultures.",
+                exampleWord: "keen"
+            },
+            {
+                word: "Lethargic",
+                pronunciation: "luh-THAR-jik",
+                partOfSpeech: "adjective",
+                definition: "Affected by lethargy; sluggish and apathetic.",
+                example: "After the heavy meal, he felt lethargic and wanted to take a nap.",
+                exampleWord: "lethargic"
+            },
+            {
+                word: "Mundane",
+                pronunciation: "muhn-DAYN",
+                partOfSpeech: "adjective",
+                definition: "Lacking interest or excitement; dull and ordinary.",
+                example: "She longed for adventure to break free from her mundane routine.",
+                exampleWord: "mundane"
+            },
+            {
+                word: "Nuance",
+                pronunciation: "NOO-ahns",
+                partOfSpeech: "noun",
+                definition: "A subtle difference in meaning, expression, or sound.",
+                example: "The translator captured every nuance of the original poem.",
+                exampleWord: "nuance"
+            },
+            {
+                word: "Obsolete",
+                pronunciation: "ob-suh-LEET",
+                partOfSpeech: "adjective",
+                definition: "No longer produced or used; out of date.",
+                example: "The old computer system became obsolete within a few years.",
+                exampleWord: "obsolete"
+            },
+            {
+                word: "Persevere",
+                pronunciation: "pur-suh-VEER",
+                partOfSpeech: "verb",
+                definition: "To continue in a course of action despite difficulty or opposition.",
+                example: "If you persevere through the challenges, you will achieve your goals.",
+                exampleWord: "persevere"
+            },
+            {
+                word: "Quandary",
+                pronunciation: "KWON-duh-ree",
+                partOfSpeech: "noun",
+                definition: "A state of perplexity or uncertainty over what to do in a difficult situation.",
+                example: "She found herself in a quandary about which job offer to accept.",
+                exampleWord: "quandary"
+            },
+            {
+                word: "Rigorous",
+                pronunciation: "RIG-er-uhs",
+                partOfSpeech: "adjective",
+                definition: "Extremely thorough and careful; strictly applied or adhered to.",
+                example: "The students underwent rigorous training to prepare for the competition.",
+                exampleWord: "rigorous"
+            },
+            {
+                word: "Substantial",
+                pronunciation: "suhb-STAN-shuhl",
+                partOfSpeech: "adjective",
+                definition: "Of considerable importance, size, or worth; solidly built.",
+                example: "The company made a substantial investment in renewable energy.",
+                exampleWord: "substantial"
+            },
+            {
+                word: "Tangible",
+                pronunciation: "TAN-juh-buhl",
+                partOfSpeech: "adjective",
+                definition: "Perceptible by touch; clear and definite; real.",
+                example: "The team needed tangible results to show their progress.",
+                exampleWord: "tangible"
+            },
+            {
+                word: "Unwavering",
+                pronunciation: "uhn-WAY-ver-ing",
+                partOfSpeech: "adjective",
+                definition: "Steady or resolute; not wavering.",
+                example: "Her unwavering dedication to the cause inspired others to join.",
+                exampleWord: "unwavering"
+            },
+            {
+                word: "Vigilant",
+                pronunciation: "VIJ-uh-luhnt",
+                partOfSpeech: "adjective",
+                definition: "Keeping careful watch for possible danger or difficulties.",
+                example: "Security guards remained vigilant throughout the night.",
+                exampleWord: "vigilant"
+            },
+            {
+                word: "Wary",
+                pronunciation: "WAIR-ee",
+                partOfSpeech: "adjective",
+                definition: "Feeling or showing caution about possible dangers or problems.",
+                example: "Investors are wary of making risky decisions during uncertain times.",
+                exampleWord: "wary"
+            },
+            {
+                word: "Yield",
+                pronunciation: "YEELD",
+                partOfSpeech: "verb",
+                definition: "To produce or provide; to give way to pressure or influence.",
+                example: "The experiment did not yield the expected results.",
+                exampleWord: "yield"
+            },
+            {
+                word: "Affable",
+                pronunciation: "AF-uh-buhl",
+                partOfSpeech: "adjective",
+                definition: "Friendly, good-natured, and easy to talk to.",
+                example: "The affable waiter made everyone feel at home in the restaurant.",
+                exampleWord: "affable"
+            },
+            {
+                word: "Bolster",
+                pronunciation: "BOHL-ster",
+                partOfSpeech: "verb",
+                definition: "To support or strengthen; to prop up.",
+                example: "The positive reviews helped bolster confidence in the new product.",
+                exampleWord: "bolster"
+            },
+            {
+                word: "Contemplate",
+                pronunciation: "KON-tuhm-playt",
+                partOfSpeech: "verb",
+                definition: "To think about carefully and at length; to consider thoughtfully.",
+                example: "She sat by the window to contemplate her future plans.",
+                exampleWord: "contemplate"
+            },
+            {
+                word: "Discern",
+                pronunciation: "dih-SURN",
+                partOfSpeech: "verb",
+                definition: "To perceive or recognize something; to distinguish mentally.",
+                example: "It was difficult to discern the truth from all the conflicting reports.",
+                exampleWord: "discern"
+            },
+            {
+                word: "Emulate",
+                pronunciation: "EM-yuh-layt",
+                partOfSpeech: "verb",
+                definition: "To match or surpass by imitation; to strive to equal or excel.",
+                example: "Young athletes often try to emulate their sports heroes.",
+                exampleWord: "emulate"
+            },
+            {
+                word: "Fortuitous",
+                pronunciation: "for-TOO-ih-tuhs",
+                partOfSpeech: "adjective",
+                definition: "Happening by chance rather than intention; lucky or fortunate.",
+                example: "Their meeting was entirely fortuitous, as neither had planned to attend the event.",
+                exampleWord: "fortuitous"
+            },
+            {
+                word: "Galvanize",
+                pronunciation: "GAL-vuh-nize",
+                partOfSpeech: "verb",
+                definition: "To shock or excite someone into taking action; to stimulate.",
+                example: "The inspiring speech helped galvanize the community into action.",
+                exampleWord: "galvanize"
+            },
+            {
+                word: "Hegemony",
+                pronunciation: "hih-JEM-uh-nee",
+                partOfSpeech: "noun",
+                definition: "Leadership or dominance, especially by one country or social group.",
+                example: "The empire sought to establish its hegemony over the entire region.",
+                exampleWord: "hegemony"
+            },
+            {
+                word: "Immutable",
+                pronunciation: "ih-MYOO-tuh-buhl",
+                partOfSpeech: "adjective",
+                definition: "Unchanging over time or unable to be changed.",
+                example: "The laws of physics are considered immutable throughout the universe.",
+                exampleWord: "immutable"
+            },
+            {
+                word: "Jeopardize",
+                pronunciation: "JEP-er-dize",
+                partOfSpeech: "verb",
+                definition: "To put something or someone in danger of loss, harm, or failure.",
+                example: "One mistake could jeopardize the entire mission.",
+                exampleWord: "jeopardize"
+            },
+            {
+                word: "Languid",
+                pronunciation: "LANG-gwid",
+                partOfSpeech: "adjective",
+                definition: "Displaying or having a disinclination for physical exertion; slow and relaxed.",
+                example: "The hot summer afternoon made everyone feel languid and drowsy.",
+                exampleWord: "languid"
+            },
+            {
+                word: "Mitigate",
+                pronunciation: "MIT-ih-gayt",
+                partOfSpeech: "verb",
+                definition: "To make less severe, serious, or painful; to lessen the impact of something.",
+                example: "The company took steps to mitigate the environmental impact of its operations.",
+                exampleWord: "mitigate"
+            },
+            {
+                word: "Nonchalant",
+                pronunciation: "non-shuh-LAHNT",
+                partOfSpeech: "adjective",
+                definition: "Feeling or appearing casually calm and relaxed; not displaying anxiety or enthusiasm.",
+                example: "He gave a nonchalant shrug when asked about his impressive achievement.",
+                exampleWord: "nonchalant"
+            },
+            {
+                word: "Ominous",
+                pronunciation: "OM-ih-nuhs",
+                partOfSpeech: "adjective",
+                definition: "Giving the impression that something bad or unpleasant is going to happen.",
+                example: "The dark clouds gathering on the horizon looked ominous.",
+                exampleWord: "ominous"
+            },
+            {
+                word: "Ponder",
+                pronunciation: "PON-der",
+                partOfSpeech: "verb",
+                definition: "To think about something carefully, especially before making a decision.",
+                example: "She took a moment to ponder the question before answering.",
+                exampleWord: "ponder"
+            },
+            {
+                word: "Resilience",
+                pronunciation: "rih-ZIL-yuhns",
+                partOfSpeech: "noun",
+                definition: "The capacity to recover quickly from difficulties; toughness and elasticity.",
+                example: "The community showed remarkable resilience after the natural disaster.",
+                exampleWord: "resilience"
+            },
+            {
+                word: "Succinct",
+                pronunciation: "suhk-SINGKT",
+                partOfSpeech: "adjective",
+                definition: "Briefly and clearly expressed; concise.",
+                example: "The executive summary provided a succinct overview of the project.",
+                exampleWord: "succinct"
+            },
+            {
+                word: "Turbulent",
+                pronunciation: "TUR-byuh-luhnt",
+                partOfSpeech: "adjective",
+                definition: "Characterized by conflict, disorder, or confusion; not stable or calm.",
+                example: "The country went through a turbulent period of political change.",
+                exampleWord: "turbulent"
+            },
+            {
+                word: "Undermine",
+                pronunciation: "uhn-der-MINE",
+                partOfSpeech: "verb",
+                definition: "To erode the base or foundation of; to weaken or damage gradually.",
+                example: "Constant criticism can undermine a person's confidence.",
+                exampleWord: "undermine"
+            },
+            {
+                word: "Vindicate",
+                pronunciation: "VIN-dih-kayt",
+                partOfSpeech: "verb",
+                definition: "To clear someone of blame or suspicion; to show to be right or justified.",
+                example: "The new evidence helped vindicate the accused person.",
+                exampleWord: "vindicate"
+            },
+            {
+                word: "Waver",
+                pronunciation: "WAY-ver",
+                partOfSpeech: "verb",
+                definition: "To shake with a quivering motion; to become unsteady or to hesitate.",
+                example: "Her voice began to waver as she delivered the emotional speech.",
+                exampleWord: "waver"
+            },
+            {
+                word: "Articulate",
+                pronunciation: "ar-TIK-yuh-luht",
+                partOfSpeech: "adjective",
+                definition: "Having or showing the ability to speak fluently and coherently.",
+                example: "The articulate speaker clearly explained the complex topic.",
+                exampleWord: "articulate"
+            },
+            {
+                word: "Catalyst",
+                pronunciation: "KAT-uh-list",
+                partOfSpeech: "noun",
+                definition: "A person or thing that precipitates an event or change.",
+                example: "The invention became a catalyst for the industrial revolution.",
+                exampleWord: "catalyst"
+            },
+            {
+                word: "Dubious",
+                pronunciation: "DOO-bee-uhs",
+                partOfSpeech: "adjective",
+                definition: "Hesitating or doubting; not to be relied upon; questionable.",
+                example: "She was dubious about the legitimacy of the investment opportunity.",
+                exampleWord: "dubious"
+            },
+            {
+                word: "Exemplary",
+                pronunciation: "ig-ZEM-pluh-ree",
+                partOfSpeech: "adjective",
+                definition: "Serving as a desirable model; representing the best of its kind.",
+                example: "The student's exemplary behavior earned her a leadership award.",
+                exampleWord: "exemplary"
+            },
+            {
+                word: "Fervent",
+                pronunciation: "FUR-vuhnt",
+                partOfSpeech: "adjective",
+                definition: "Having or displaying a passionate intensity; ardent.",
+                example: "The candidate had fervent support from young voters.",
+                exampleWord: "fervent"
+            },
+            {
+                word: "Illustrious",
+                pronunciation: "ih-LUHS-tree-uhs",
+                partOfSpeech: "adjective",
+                definition: "Well known, respected, and admired for past achievements.",
+                example: "The university had an illustrious history of producing Nobel Prize winners.",
+                exampleWord: "illustrious"
+            },
+            {
+                word: "Magnanimous",
+                pronunciation: "mag-NAN-uh-muhs",
+                partOfSpeech: "adjective",
+                definition: "Very generous or forgiving, especially toward a rival or less powerful person.",
+                example: "In a magnanimous gesture, the winner thanked all the other competitors.",
+                exampleWord: "magnanimous"
+            },
+            {
+                word: "Prolific",
+                pronunciation: "pruh-LIF-ik",
+                partOfSpeech: "adjective",
+                definition: "Producing much fruit or foliage or many offspring; highly productive.",
+                example: "The prolific author published over fifty novels in her career.",
+                exampleWord: "prolific"
+            },
+            {
+                word: "Transcend",
+                pronunciation: "tran-SEND",
+                partOfSpeech: "verb",
+                definition: "To be or go beyond the range or limits of something; to surpass.",
+                example: "Great art has the power to transcend cultural boundaries.",
+                exampleWord: "transcend"
+            },
+            {
+                word: "Altruistic",
+                pronunciation: "al-troo-IS-tik",
+                partOfSpeech: "adjective",
+                definition: "Showing a disinterested and selfless concern for the well-being of others.",
+                example: "Her altruistic actions helped improve the lives of many in the community.",
+                exampleWord: "altruistic"
+            },
+            {
+                word: "Concise",
+                pronunciation: "kuhn-SISE",
+                partOfSpeech: "adjective",
+                definition: "Giving a lot of information clearly and in few words; brief but comprehensive.",
+                example: "The professor asked for a concise summary of the research findings.",
+                exampleWord: "concise"
+            },
+            {
+                word: "Earnest",
+                pronunciation: "UR-nist",
+                partOfSpeech: "adjective",
+                definition: "Resulting from or showing sincere and intense conviction; serious in intention.",
+                example: "She made an earnest attempt to reconcile with her old friend.",
+                exampleWord: "earnest"
+            },
+            {
+                word: "Formidable",
+                pronunciation: "FOR-mih-duh-buhl",
+                partOfSpeech: "adjective",
+                definition: "Inspiring fear or respect through being impressively large, powerful, or capable.",
+                example: "The team faced a formidable opponent in the championship match.",
+                exampleWord: "formidable"
+            },
+            {
+                word: "Impeccable",
+                pronunciation: "im-PEK-uh-buhl",
+                partOfSpeech: "adjective",
+                definition: "In accordance with the highest standards; faultless.",
+                example: "The butler maintained impeccable standards of service.",
+                exampleWord: "impeccable"
+            },
+            {
+                word: "Profound",
+                pronunciation: "pruh-FOUND",
+                partOfSpeech: "adjective",
+                definition: "Very great or intense; having deep insight or understanding.",
+                example: "The book had a profound impact on how she viewed the world.",
+                exampleWord: "profound"
+            },
+            {
+                word: "Steadfast",
+                pronunciation: "STED-fast",
+                partOfSpeech: "adjective",
+                definition: "Resolutely or dutifully firm and unwavering; loyal and committed.",
+                example: "She remained steadfast in her beliefs despite opposition.",
+                exampleWord: "steadfast"
+            },
+            {
+                word: "Trivial",
+                pronunciation: "TRIV-ee-uhl",
+                partOfSpeech: "adjective",
+                definition: "Of little value or importance; concerned with insignificant things.",
+                example: "They argued over trivial matters instead of focusing on the main issue.",
+                exampleWord: "trivial"
+            },
+            {
+                word: "Venerable",
+                pronunciation: "VEN-er-uh-buhl",
+                partOfSpeech: "adjective",
+                definition: "Accorded a great deal of respect, especially because of age, wisdom, or character.",
+                example: "The venerable professor had taught at the university for over forty years.",
+                exampleWord: "venerable"
+            },
+            {
+                word: "Zeal",
+                pronunciation: "ZEEL",
+                partOfSpeech: "noun",
+                definition: "Great energy or enthusiasm in pursuit of a cause or an objective.",
+                example: "She approached every new project with tremendous zeal and dedication.",
+                exampleWord: "zeal"
+            }
+        ];
+
+        // ===== STORAGE HELPER FUNCTIONS =====
+        // These functions help us save and load data from the browser's storage
+        // Think of localStorage like a filing cabinet that remembers things even after you close the browser
+
+        // This function saves data to localStorage
+        function saveToStorage(key, value) {
+            try {
+                localStorage.setItem(key, JSON.stringify(value));
+            } catch (e) {
+                console.error('Could not save to storage:', e);
+            }
+        }
+
+        // This function retrieves data from localStorage
+        function getFromStorage(key, defaultValue = null) {
+            try {
+                const item = localStorage.getItem(key);
+                return item ? JSON.parse(item) : defaultValue;
+            } catch (e) {
+                console.error('Could not load from storage:', e);
+                return defaultValue;
+            }
+        }
+
+        // ===== APP STATE =====
+        // This is like the "brain" of our app - it remembers everything
+        let currentWordIndex = getFromStorage('currentWordIndex', 0);
+        let learnedWords = getFromStorage('learnedWords', []);
+        let lastVisitDate = getFromStorage('lastVisitDate', null);
+        let streak = getFromStorage('streak', 0);
+
+        // ===== DATE HELPER =====
+        // This gets today's date in a simple format (YYYY-MM-DD)
+        function getTodayDate() {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+        }
+
+        // ===== CHECK AND UPDATE STREAK =====
+        // This function checks if the user visited yesterday to maintain their streak
+        function updateStreak() {
+            const today = getTodayDate();
+            
+            if (lastVisitDate === today) {
+                // User already visited today, no change needed
+                return;
+            }
+            
+            if (lastVisitDate) {
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+                const yesterdayStr = yesterday.toISOString().split('T')[0];
+                
+                if (lastVisitDate === yesterdayStr) {
+                    // User visited yesterday, increment streak
+                    streak++;
+                } else {
+                    // User missed a day, reset streak
+                    streak = 1;
+                }
+            } else {
+                // First visit ever
+                streak = 1;
+            }
+            
+            lastVisitDate = today;
+            saveToStorage('lastVisitDate', lastVisitDate);
+            saveToStorage('streak', streak);
+            updateStats();
+        }
+
+        // ===== DISPLAY WORD =====
+        // This function shows a word on the screen
+        function displayWord(index) {
+            // Make sure the index is within bounds (doesn't go past our word list)
+            if (index >= wordDatabase.length) {
+                index = 0; // Start over from the beginning
+            }
+            
+            const word = wordDatabase[index];
+            currentWordIndex = index;
+            saveToStorage('currentWordIndex', currentWordIndex);
+            
+            // Update the HTML elements with the word's information
+            document.getElementById('wordTitle').textContent = word.word;
+            document.getElementById('pronunciation').textContent = word.pronunciation;
+            document.getElementById('partOfSpeech').textContent = word.partOfSpeech;
+            document.getElementById('definition').textContent = word.definition;
+            
+            // Create the example sentence with the word highlighted
+            const exampleHTML = word.example.replace(
+                new RegExp(word.exampleWord, 'gi'),
+                '<span class="highlight">$&</span>'
+            );
+            document.getElementById('example').innerHTML = exampleHTML;
+            
+            // Check if this word was already learned
+            const isLearned = learnedWords.some(w => w.word === word.word);
+            const markLearnedBtn = document.getElementById('markLearnedBtn');
+            
+            if (isLearned) {
+                markLearnedBtn.textContent = '✓ Already Learned';
+                markLearnedBtn.disabled = true;
+            } else {
+                markLearnedBtn.textContent = '✓ I\'ve Learned This Word';
+                markLearnedBtn.disabled = false;
+            }
+        }
+
+        // ===== MARK WORD AS LEARNED =====
+        // This function adds the current word to the learned list
+        function markAsLearned() {
+            const word = wordDatabase[currentWordIndex];
+            
+            // Check if already learned (to avoid duplicates)
+            if (learnedWords.some(w => w.word === word.word)) {
+                return;
+            }
+            
+            // Add the word to our learned collection
+            const learnedWord = {
+                word: word.word,
+                pronunciation: word.pronunciation,
+                learnedDate: getTodayDate()
+            };
+            
+            learnedWords.unshift(learnedWord); // Add to beginning of array
+            saveToStorage('learnedWords', learnedWords);
+            
+            // Update the display
+            updateStats();
+            displayLearnedWords();
+            
+            // Visual feedback
+            const btn = document.getElementById('markLearnedBtn');
+            btn.textContent = '✓ Word Learned!';
+            btn.style.background = 'var(--success)';
+            btn.disabled = true;
+            
+            // Automatically move to next word after a short delay
+            setTimeout(() => {
+                nextWord();
+            }, 1500);
+        }
+
+        // ===== NEXT WORD =====
+        // This function moves to the next word in the database
+        function nextWord() {
+            displayWord(currentWordIndex + 1);
+        }
+
+        // ===== UPDATE STATISTICS =====
+        // This updates the numbers shown at the top
+        function updateStats() {
+            document.getElementById('streakCount').textContent = streak;
+            document.getElementById('totalWords').textContent = learnedWords.length;
+        }
+
+        // ===== DISPLAY LEARNED WORDS =====
+        // This shows all the words the user has learned so far
+        function displayLearnedWords() {
+            const grid = document.getElementById('learnedGrid');
+            
+            if (learnedWords.length === 0) {
+                grid.innerHTML = '<div class="empty-state">Start learning words to build your collection!</div>';
+                return;
+            }
+            
+            // Create HTML for each learned word
+            grid.innerHTML = learnedWords.map(word => `
+                <div class="learned-word">
+                    <div class="learned-word-title">${word.word}</div>
+                    <div class="learned-date">Learned on ${formatDate(word.learnedDate)}</div>
+                </div>
+            `).join('');
+        }
+
+        // ===== FORMAT DATE =====
+        // This makes dates look nicer (e.g., "January 15, 2025")
+        function formatDate(dateStr) {
+            const date = new Date(dateStr + 'T00:00:00');
+            return date.toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+            });
+        }
+
+        // ===== EVENT LISTENERS =====
+        // These "listen" for button clicks and run functions when they happen
+        document.getElementById('markLearnedBtn').addEventListener('click', markAsLearned);
+        document.getElementById('nextWordBtn').addEventListener('click', nextWord);
+
+        // ===== INITIALIZE APP =====
+        // This runs when the page first loads
+        function init() {
+            updateStreak();
+            displayWord(currentWordIndex);
+            displayLearnedWords();
+            updateStats();
+        }
+
+        // Start the app!
+        init();
+    </script>
+</body>
+</html>
